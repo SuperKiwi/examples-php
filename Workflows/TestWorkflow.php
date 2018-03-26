@@ -9,6 +9,7 @@ class TestWorkflow extends Version
         return [
             TestWorkflow_v0::class,
             TestWorkflow_v1::class,
+            TestWorkflow_v2::class,
         ];
     }
 }

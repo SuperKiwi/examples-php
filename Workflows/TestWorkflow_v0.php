@@ -4,14 +4,14 @@ use Zenaton\Interfaces\WorkflowInterface;
 use Zenaton\Traits\Zenatonable;
 use Zenaton\Tasks\Wait;
 
-class TestWorkflow_v0 implements WorkflowInterface
+class NotifyEtaWorkflow_v0 implements WorkflowInterface
 {
     use Zenatonable;
 
-    // duration before
-    const BEFORE = 30;
+    // inform user # seconds before ETA
+    const BEFORE = 3600;
 
-    // UTC timestamp of estimated time of arrival
+    // estimated Time of Arrival
     protected $eta;
 
     public function __construct($eta)
@@ -23,6 +23,6 @@ class TestWorkflow_v0 implements WorkflowInterface
     {
         (new Wait())->timestamp($this->eta - self::BEFORE)->execute();
 
-        (new TellEtaTask($this->eta))->execute();
+        (new NotifyUserOfEtaTask($this->eta))->execute();
     }
 }

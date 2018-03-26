@@ -8,13 +8,13 @@ class TestWorkflow_v1 implements WorkflowInterface
 {
     use Zenatonable;
 
-    // duration before
-    const BEFORE = 30;
+    // inform user # seconds before ETA
+    const BEFORE = 3600;
 
-    // id
+    // workflow id
     protected $id;
 
-    // UTC timestamp of estimated time of arrival
+    // estimated Time of Arrival
     protected $eta;
 
     public function __construct($id, $eta)
@@ -33,9 +33,8 @@ class TestWorkflow_v1 implements WorkflowInterface
             $event = (new Wait(EtaUpdatedEvent::class))->timestamp($eta - self::BEFORE)->execute();
         }
 
-        // var_dump($eta);
         // send message
-        (new TellEtaTask($eta))->execute();
+        (new NotifyUserOfEtaTask($eta))->execute();
     }
 
     public function getId()

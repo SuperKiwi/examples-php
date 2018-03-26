@@ -8,16 +8,16 @@ class TestWorkflow_v2 implements WorkflowInterface
 {
     use Zenatonable;
 
-    // duration before
-    const BEFORE = 30;
+    // inform user # seconds before ETA
+    const BEFORE = 3600;
 
-    // duration before
-    const PRECISION = 30;
+    // update threshold : inform user if ETA changed more than # seconds
+    const UPDATE = 1200;
 
-    // id
+    // workflow id
     protected $id;
 
-    // UTC timestamp of estimated time of arrival
+    // estimated Time of Arrival
     protected $eta;
 
     public function __construct($id, $eta)
@@ -28,24 +28,24 @@ class TestWorkflow_v2 implements WorkflowInterface
 
     public function handle()
     {
-        // fake event
+        // wait until updated ETA - self::BEFORE
         $event = new EtaUpdatedEvent($this->eta);
-
-        // wait until updated target time
         while ($event) {
-            $event = (new Wait(EtaUpdatedEvent::class))->timestamp($event->eta - self::BEFORE)->execute();
+            $eta = $event->eta;
+            $event = (new Wait(EtaUpdatedEvent::class))->timestamp($eta - self::BEFORE)->execute();
         }
 
-        // send message
-        (new TellEtaTask($this->eta))->execute();
+        // inform user of ETA
+        (new NotifyUserOfEtaTask($eta))->execute();
 
-        // continue to wait to inform user of significant changes
-        $event = new EtaUpdatedEvent($this->eta);
+        // inform user of significant change of ETA until arrival
+        $event = new EtaUpdatedEvent($eta);
         while ($event) {
             $event = (new Wait(EtaUpdatedEvent::class))->timestamp($event->eta)->execute();
-            if ($event && abs($this->eta - $event->eta) >= self::PRECISION) {
-                $this->eta = $event->eta;
-                (new TellEtaTask($this->eta))->execute();
+            if ($event && abs($eta - $event->eta) >= self::UPDATE) {
+                // inform user of updated ETA
+                $eta = $event->eta;
+                (new NotifyUserOfUpdatedEtaTask($eta))->execute();
             }
         }
     }
