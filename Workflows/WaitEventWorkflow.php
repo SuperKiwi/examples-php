@@ -15,7 +15,7 @@ class WaitEventWorkflow implements WorkflowInterface
 
         // If event has been triggered
         if ($event) {
-            // Execute TaskB
+            // Execute Task A
             (new TaskA())->execute();
         } else {
             // Execute Task B
