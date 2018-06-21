@@ -113,6 +113,14 @@ php launch_recursive.php
 [This example](https://github.com/zenaton/examples-php/tree/master/Workflows/VersionWorkflow.php) showcases
 - how to update your workflow implementation, even while previous versions are still running
 
+First, launch :
 ```php
-php launch_version.php
+php launch_version_before.php
 ```
+This will trigger `VersionWorkflow_v0.php` that was your workflow in the first version.
+
+A few (~5/10) seconds later, launch :
+```php
+php launch_version_after.php
+```
+This will trigger `VersionWorkflow.php` that is now dealing with the 2 versions of your Workflow.

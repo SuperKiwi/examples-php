@@ -1,8 +1,8 @@
 <?php
 
-use Zenaton\Interfaces\WorkflowInterface;
+use Zenaton\Tasks\Wait;
 use Zenaton\Traits\Zenatonable;
-use Zenaton\Parallel\Parallel;
+use Zenaton\Interfaces\WorkflowInterface;
 
 class VersionWorkflow_v0 implements WorkflowInterface
 {
@@ -10,9 +10,10 @@ class VersionWorkflow_v0 implements WorkflowInterface
 
     public function handle()
     {
-        (new Parallel(
-            new TaskA(),
-            new TaskB()
-        ))->execute();
+        (new TaskA())->execute();
+
+        (new Wait)->seconds(100)->execute();
+
+        (new TaskB())->execute();
     }
 }
