@@ -1,8 +1,8 @@
 <?php
 
-use Zenaton\Interfaces\WorkflowInterface;
-use Zenaton\Traits\Zenatonable;
 use Zenaton\Parallel\Parallel;
+use Zenaton\Traits\Zenatonable;
+use Zenaton\Interfaces\WorkflowInterface;
 
 class VersionWorkflow_v1 implements WorkflowInterface
 {
@@ -12,8 +12,7 @@ class VersionWorkflow_v1 implements WorkflowInterface
     {
         (new Parallel(
             new TaskA(),
-            new TaskB(),
-            new TaskC()
+            new TaskB()
         ))->execute();
     }
 }
